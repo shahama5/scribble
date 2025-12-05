@@ -1,17 +1,25 @@
 import React from 'react'
-type props = {
-    title:string,
-    description:string
+
+type Props = {
+  title: string
+  description: string
+  tags: string[]
 }
 
-const card = ({title,description}:props) => {
+const Card = ({ title, description, tags }: Props) => {
   return (
-    <div className='w-auto  rounded-xl py-6 px-4 bg-white border border-gray-400 '>
-      <h1 className='font-normal text-lg mb-1 text-gray-800'>{title}</h1>
-      <h1 className='text-sm text-gray-800'>{description}</h1>
-
+    <div className="border rounded-lg p-4 shadow hover:shadow-lg transition-shadow bg-white">
+      <h3 className="text-lg font-bold mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm mb-3">{description}</p>
+      <div className="flex flex-wrap gap-2">
+        {tags?.map((tag, i) => (
+          <span key={i} className="text-xs bg-gray-200 px-2 py-1 rounded-full text-gray-700">
+            {tag}
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
 
-export default card
+export default Card

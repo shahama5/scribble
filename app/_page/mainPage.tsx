@@ -134,7 +134,7 @@ const MainPage = () => {
           <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-[400px]">
            
             <input
-              className="w-full border-b border-gray-300 outline-none pb-2 mb-3 text-sm sm:text-base"
+              className="w-full border-b border-gray-300 text-black outline-none pb-2 mb-3 text-sm sm:text-base"
               value={selectedCard.title}
               onChange={(e) =>
                 setSelectedCard({ ...selectedCard, title: e.target.value })
@@ -142,7 +142,7 @@ const MainPage = () => {
             />
 
             <textarea
-              className="w-full outline-none resize-none text-sm sm:text-base min-h-[80px]"
+              className="w-full outline-none text-black resize-none text-sm sm:text-base min-h-20"
               value={selectedCard.text}
               onChange={(e) =>
                 setSelectedCard({ ...selectedCard, text: e.target.value })
@@ -152,7 +152,7 @@ const MainPage = () => {
            
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3 mt-3">
               <input
-                className="border px-2 py-1 rounded w-full text-sm sm:text-base"
+                className="border text-black px-2 py-1 rounded w-full text-sm sm:text-base"
                 placeholder="Add tag"
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
@@ -203,7 +203,7 @@ const MainPage = () => {
       )}
 
      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 lg:px-12 xl:px-45 pt-6 sm:pt-10 lg:pt-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 bg-gray-50 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 lg:px-12 xl:px-45 pt-6 sm:pt-10 lg:pt-20">
         {filtered.length === 0 ? (
           <div className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 text-center text-gray-500 py-12">
             No notes found. Create your first note!

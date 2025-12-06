@@ -14,7 +14,7 @@ const Card = ({ title, description, tags, onClick, onDelete }: Props) => {
       onClick={onClick}
       className="relative border border-gray-100 rounded-lg p-4 shadow hover:shadow-lg transition-shadow bg-white cursor-pointer"
     >
-      {/* Delete Icon */}
+      
       <Trash 
         className="size-4 text-gray-500 absolute top-2 right-2 hover:text-gray-600"
         onClick={(e) => {
@@ -23,7 +23,7 @@ const Card = ({ title, description, tags, onClick, onDelete }: Props) => {
         }}
       />
 
-      <h3 className="text-lg font-bold mb-2">{title}</h3>
+      <h3 className="text-lg font-bold text-gray-600 mb-2">{title}</h3>
       <p className="text-gray-600 text-sm mb-3">{description}</p>
 
       <div className="flex flex-wrap gap-2">

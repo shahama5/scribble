@@ -1,15 +1,19 @@
 "use client";
 import React, { useState } from "react";
 import MenuIcon from "../components/menuIcon";
-import { Plus } from "lucide-react";
+import { Plus, Star, Trash2, Tag, Home } from "lucide-react";
+
 
 const Header = ({
   onAddNote = () => {},
   onSearchResult = () => {},
-  allCards = []
+  allCards = [],
+  toggleSidebar = () => {}
 }: any) => {
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // for add-note modal
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // for sidebar
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -18,37 +22,47 @@ const Header = ({
 
     const filtered = allCards.filter((card: any) =>
       card.title.toLowerCase().includes(search) ||
-      card.description.toLowerCase().includes(search) ||
+      card.text.toLowerCase().includes(search) ||
       card.tags.some((tag: string) => tag.toLowerCase().includes(search))
     );
 
     onSearchResult(filtered);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (title.trim() || description.trim()) {
-      onAddNote({ title, description, tags: [] });
-      setTitle("");
-      setDescription("");
-      setIsOpen(false);
+      const ok = await onAddNote({ title, text: description, tags: [] });
+      if (ok) {
+        setTitle("");
+        setDescription("");
+        setIsOpen(false);
+      }
     }
   };
 
   return (
     <div>
-      <div className="flex gap-5 justify-between px-4 py-4 items-center">
+
+      {/* HEADER */}
+      <div className="flex gap-5 justify-between px-4 py-4 items-center shadow-sm bg-white">
+        
+        {/* MENU ICON */}
         <div className="flex items-center gap-3">
-          <MenuIcon className="size-9 text-gray-700" />
+          <button onClick={() => setIsSidebarOpen(true)}>
+            <MenuIcon className="size-9 text-gray-700 cursor-pointer" />
+          </button>
           <h1 className="text-2xl font-bold text-gray-800">Scribble</h1>
         </div>
 
+        {/* SEARCH */}
         <input
           type="text"
           placeholder="Search notes ..."
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full pr-4 bg-gray-50 border pl-10 border-gray-200 rounded-lg py-2"
+          className="w-full pr-4 bg-gray-50 border pl-4 border-gray-200 rounded-lg py-2"
         />
 
+        {/* ADD NOTE BUTTON */}
         <button
           onClick={() => setIsOpen(true)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -58,6 +72,65 @@ const Header = ({
         </button>
       </div>
 
+      {/* =========================== */}
+      {/*       GOOGLE KEEP SIDEBAR   */}
+      {/* =========================== */}
+      {isSidebarOpen && (
+        <>
+          {/* Black background */}
+          <div
+            className="fixed inset-0 bg-black/40"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+
+          {/* SIDEBAR */}
+          <div className="fixed top-0 left-0 h-full w-[230px] bg-white shadow-xl p-4 z-50 animate-slide-right">
+            <MenuIcon 
+  onClick={toggleSidebar}
+  className="size-9 text-gray-700 cursor-pointer"
+/>
+
+            <h2 className="text-xl font-bold mb-6">Menu</h2>
+
+            <div className="flex flex-col gap-4">
+
+              <button className="flex items-center gap-3 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-lg">
+                <Home className="size-5" /> Notes
+              </button>
+
+              <button className="flex items-center gap-3 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-lg">
+                <Star className="size-5" /> Important
+              </button>
+
+              <button className="flex items-center gap-3 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-lg">
+                <Tag className="size-5" /> Tags
+              </button>
+
+              <button className="flex items-center gap-3 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-lg">
+                <Trash2 className="size-5" /> Trash
+              </button>
+
+            </div>
+          </div>
+        </>
+      )}
+
+      
+      <style jsx>{`
+        .animate-slide-right {
+          animation: slideRight 0.25s ease-out forwards;
+        }
+        @keyframes slideRight {
+          from {
+            transform: translateX(-250px);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
+
+      {/* ADD NOTE MODAL */}
       {isOpen && (
         <>
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsOpen(false)}></div>

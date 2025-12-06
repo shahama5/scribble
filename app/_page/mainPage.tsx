@@ -25,7 +25,7 @@ const MainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = (card: Note) => {
-    setSelectedCard({ ...card }); // clone to avoid direct mutation
+    setSelectedCard({ ...card }); 
     setIsModalOpen(true);
   };
 
@@ -128,11 +128,11 @@ const MainPage = () => {
         onSearchResult={setFiltered}
       />
 
-      {/* MODAL */}
+   
       {isModalOpen && selectedCard && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-[400px]">
-            {/* Title */}
+           
             <input
               className="w-full border-b border-gray-300 outline-none pb-2 mb-3"
               value={selectedCard.title}
@@ -141,7 +141,6 @@ const MainPage = () => {
               }
             />
 
-            {/* Text */}
             <textarea
               className="w-full outline-none resize-none"
               value={selectedCard.text}
@@ -150,7 +149,7 @@ const MainPage = () => {
               }
             />
 
-            {/* ADD TAG */}
+           
             <div className="flex items-center gap-2 mb-3">
               <input
                 className="border px-2 py-1 rounded w-full"
@@ -186,14 +185,14 @@ const MainPage = () => {
 
             <div className="flex justify-between mt-4">
               <button
-                className="px-4 py-2 bg-gray-300 rounded"
+                className="px-4 py-2 bg-gray-300 text-black rounded"
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancel
               </button>
 
               <button
-                className="px-4 py-2 bg-gray-300 text-white rounded"
+                className="px-4 py-2 bg-gray-300 text-black rounded"
                 onClick={saveUpdatedNote}
               >
                 Save
@@ -203,7 +202,7 @@ const MainPage = () => {
         </div>
       )}
 
-      {/* CARDS */}
+     
       <div className="grid grid-cols-4 gap-4 p-4 px-45 pt-20">
         {filtered.length === 0 ? (
           <div className="col-span-4 text-center text-gray-500 py-12">

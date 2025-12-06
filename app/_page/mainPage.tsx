@@ -5,17 +5,26 @@ import Header from "../_layout/Header";
 import ModalEdit from "../components/modalEdit";
 import { noteApi } from "@/src/api/config/notesApi";
 
+// Define the Note interface
+interface Note {
+  _id: string;
+  title: string;
+  text: string;
+  tags: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 const MainPage = () => {
-  const [cards, setCards] = useState([]);
-  const [filtered, setFiltered] = useState([]);
+  const [cards, setCards] = useState<Note[]>([]);
+  const [filtered, setFiltered] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTag, setNewTag] = useState("");
 
-
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState<Note | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = (card: any) => {
+  const openModal = (card: Note) => {
     setSelectedCard({ ...card }); // clone to avoid direct mutation
     setIsModalOpen(true);
   };
@@ -40,7 +49,7 @@ const MainPage = () => {
     }
   };
 
-  const addNewNote = async (note: any) => {
+  const addNewNote = async (note: { title: string; text: string; tags?: string[] }) => {
     try {
       const response = await noteApi.createNote({
         title: note.title,
@@ -66,7 +75,7 @@ const MainPage = () => {
       const response = await noteApi.deleteNote(id);
 
       if (response.success) {
-        const updated = cards.filter((card: any) => card._id !== id);
+        const updated = cards.filter((card) => card._id !== id);
         setCards(updated);
         setFiltered(updated);
         return true;
@@ -79,6 +88,8 @@ const MainPage = () => {
   };
 
   const saveUpdatedNote = async () => {
+    if (!selectedCard) return;
+
     try {
       const response = await noteApi.updateNote(selectedCard._id, {
         title: selectedCard.title,
@@ -87,7 +98,7 @@ const MainPage = () => {
       });
 
       if (response.success) {
-        const updated = cards.map((item: any) =>
+        const updated = cards.map((item) =>
           item._id === selectedCard._id ? response.data : item
         );
 
@@ -118,15 +129,13 @@ const MainPage = () => {
       />
 
       {/* MODAL */}
-      {isModalOpen && (
+      {isModalOpen && selectedCard && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-[400px]">
-            {/* <h2 className="text-xl font-bold mb-4">Edit Note</h2> */}
-
             {/* Title */}
             <input
               className="w-full border-b border-gray-300 outline-none pb-2 mb-3"
-              value={selectedCard?.title}
+              value={selectedCard.title}
               onChange={(e) =>
                 setSelectedCard({ ...selectedCard, title: e.target.value })
               }
@@ -135,48 +144,47 @@ const MainPage = () => {
             {/* Text */}
             <textarea
               className="w-full outline-none resize-none"
-              value={selectedCard?.text}
+              value={selectedCard.text}
               onChange={(e) =>
                 setSelectedCard({ ...selectedCard, text: e.target.value })
               }
             />
 
             {/* ADD TAG */}
-<div className="flex items-center gap-2 mb-3">
-  <input
-    className="border px-2 py-1 rounded w-full"
-    placeholder="Add tag"
-    value={newTag}
-    onChange={(e) => setNewTag(e.target.value)}
-  />
+            <div className="flex items-center gap-2 mb-3">
+              <input
+                className="border px-2 py-1 rounded w-full"
+                placeholder="Add tag"
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+              />
 
-  <button
-    className="px-3 py-1 bg-gray-600 text-white rounded"
-    onClick={() => {
-      if (!newTag.trim()) return;
+              <button
+                className="px-3 py-1 bg-gray-600 text-white rounded"
+                onClick={() => {
+                  if (!newTag.trim()) return;
 
-      setSelectedCard({
-        ...selectedCard,
-        tags: [...selectedCard.tags, newTag]
-      });
+                  setSelectedCard({
+                    ...selectedCard,
+                    tags: [...selectedCard.tags, newTag]
+                  });
 
-      setNewTag("");
-    }}
-  >
-    Add
-  </button>
-</div>
+                  setNewTag("");
+                }}
+              >
+                Add
+              </button>
+            </div>
 
             <ModalEdit
               selectedCard={selectedCard}
               onRemoveTag={(tag: string) => {
-                const updated = selectedCard.tags.filter((t: any) => t !== tag);
+                const updated = selectedCard.tags.filter((t) => t !== tag);
                 setSelectedCard({ ...selectedCard, tags: updated });
               }}
             />
 
             <div className="flex justify-between mt-4">
-
               <button
                 className="px-4 py-2 bg-gray-300 rounded"
                 onClick={() => setIsModalOpen(false)}
@@ -202,11 +210,11 @@ const MainPage = () => {
             No notes found. Create your first note!
           </div>
         ) : (
-          filtered.map((item: any) => (
+          filtered.map((item) => (
             <Card
               key={item._id}
               {...item}
-              tags = {item.tags ||[]}
+              tags={item.tags || []}
               description={item.text}
               onClick={() => openModal(item)}
               onDelete={() => deleteNote(item._id)}
